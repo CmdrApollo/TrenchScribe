@@ -1,57 +1,20 @@
-from flask import Flask, render_template, request
-import os, json
+from flask import Flask, render_template, request, send_file
+import os, json, time
 
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet
 
 inch = 72
 
-addons = json.load(open('addons.json', 'rb'))
-equipment = json.load(open('equipment.json', 'rb'))
+addons = json.load(open(os.path.join('data', 'addons.json'), 'rb'))
+equipment = json.load(open(os.path.join('data', 'equipment.json'), 'rb'))
 
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib import colors
 
 # Create a new stylesheet object
 custom_styles = getSampleStyleSheet()
-
-# Modify existing styles or add new ones
-custom_styles.add(ParagraphStyle(
-    name='TitleStyle',
-    fontName='Courier',
-    fontSize=24,
-    leading=0,  # Line height
-    alignment=0,  # Center alignment
-    textColor=colors.black
-))
-
-custom_styles.add(ParagraphStyle(
-    name='BodyStyle',
-    fontName='Courier',
-    fontSize=12,
-    leading=0,
-    alignment=0,  # Left alignment
-    textColor=colors.black
-))
-
-highlight_color = colors.lightgreen
-
-custom_styles.add(ParagraphStyle(
-    name='HighlightStyle',
-    fontName='Courier',
-    fontSize=12,
-    leading=0,
-    alignment=0,  # Left alignment
-    textColor=colors.black,
-    borderColor=highlight_color
-))
-
-
-# Access styles like this:
-title_style = custom_styles['TitleStyle']
-body_style = custom_styles['BodyStyle']
-highlight_style = custom_styles['BodyStyle']
 
 def literal(x):
     if x > 0:
@@ -63,13 +26,9 @@ def split(line):
     final = ['']
 
     for token in line.split(' '):
-        if token == "\n":
+        final[-1] += token + ' '
+        if len(final[-1]) >= max_len:
             final.append('')
-            continue
-        else:
-            final[-1] += token + ' '
-            if len(final[-1]) >= max_len:
-                final.append('')
 
     return final
 
@@ -84,6 +43,17 @@ def cursed(obj):
         pass
     return final
 
+def cursed_weapon(obj):
+    final = ""
+    final += "\n".join(split(obj["Description"][0]["SubContent"][0]["Content"]))
+    try:
+        if len(obj["Description"][0]["SubContent"]) > 1:
+            for d in obj["Description"][0]["SubContent"][1]["SubContent"]:
+                final += "\n    • " + d["Content"]
+    except KeyError:
+        pass
+    return final
+
 def get_addon(a):
     for add in addons:
         if add['id'] == a:
@@ -92,14 +62,37 @@ def get_addon(a):
     return None
 
 def get_equipment(a):
-    print(a)
     for add in equipment:
         if add['id'] == a:
             return add
         
     return equipment[0]
 
-def generate_pdf_with_table(data):
+def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting, color):
+    # Modify existing styles or add new ones
+    custom_styles.add(ParagraphStyle(
+        name='TitleStyle',
+        fontName='Courier',
+        fontSize=24,
+        leading=0,  # Line height
+        alignment=0,  # Center alignment
+        textColor=color
+    ))
+
+    custom_styles.add(ParagraphStyle(
+        name='BodyStyle',
+        fontName='Courier',
+        fontSize=12,
+        leading=0,
+        alignment=0,  # Left alignment
+        textColor=colors.black
+    ))
+
+    # Access styles like this:
+    title_style = custom_styles['TitleStyle']
+    body_style = custom_styles['BodyStyle']
+    highlight_style = custom_styles['BodyStyle']
+
     filename = f"{data['Name']}.pdf"
     doc = SimpleDocTemplate(filename, pagesize=letter)
 
@@ -114,7 +107,17 @@ def generate_pdf_with_table(data):
         [
             ('INNERGRID', (0,0), (-1,-1), 0.25, (0, 0, 0)),
             ('BOX', (0,0), (-1,-1), 0.25, (0, 0, 0)),
-            ('FONTNAME', (0, 0), (-1, -1), "Courier")
+            ('FONTNAME', (0, 0), (-1, -1), "Courier"),
+            ('ROUNDEDCORNERS', [8 * corner_rounding] * 4)
+        ]
+    )
+
+    table_style_3 = TableStyle(
+        [
+            ('INNERGRID', (0,0), (-1,-1), 0.25, (0, 0, 0)),
+            ('BOX', (0,0), (-1,-1), 0.25, (0, 0, 0)),
+            ('FONTNAME', (0, 0), (-1, -1), "Courier"),
+            ('BACKGROUND', (0, 0), (-1, -1), color)
         ]
     )
     
@@ -163,7 +166,7 @@ def generate_pdf_with_table(data):
                     weapon_data.append([Table([["Name", "Type", "Range", "Keywords"], [weapon_obj["Name"], weapon_obj["EquipType"], weapon_obj["Range"], ", ".join([t["tag_name"] for t in weapon_obj["Tags"]])]], colWidths=None, style=table_style)])
 
                     if len(weapon_obj["Description"]):
-                        weapon_data.append([Table([[f"Rules:\n{"\n".join(split(cursed(get_equipment(weapon_obj['ID']))))}"]], colWidths=None, style=table_style_2)])
+                        weapon_data.append([Table([[f"Rules:\n{cursed_weapon(weapon_obj)}"]], colWidths=None, style=table_style_2)])
 
             abilities_data = [
                 ['Abilities/Upgrades:'],
@@ -173,12 +176,30 @@ def generate_pdf_with_table(data):
 
             for ability in obj["Abilities"]:
                 a = get_addon(ability["Content"])
+                if a["name"] in ["Tough", "Strong", "Fear", "Infiltrator"] and ignore_tough:
+                    continue
                 string += "\n• " + a["name"] + ":\n" + cursed(a)
 
             for upgrade in member["Upgrades"]:
                 string += "\n• " + upgrade["Name"] + ":\n" + "\n".join(split(upgrade["Description"][0]["Content"]))
 
-            abilities_data.append([Table([[string]], colWidths=None, style=table_style_2)])
+            if string != "":
+                abilities_data.append([Table([[string]], colWidths=None, style=table_style_2)])
+
+            skills_data = [
+                ['Skills/Injuries:'],
+            ]
+            
+            string = ""
+
+            for skill in member["Skills"]:
+                string += "\n• " + skill["name"] + ":\n" + "\n".join(split(skill["description"][0]["content"]))
+
+            for injury in member["Injuries"]:
+                string += "\n• " + injury["Name"] + ":\n" + "\n".join(split(injury["Description"][0]["Content"]))
+
+            if string != "":
+                skills_data.append([Table([[string]], colWidths=None, style=table_style_2)])
             
             equipment_data = [
                 ['Equipment:'],
@@ -191,7 +212,8 @@ def generate_pdf_with_table(data):
                 if len(e["description"]) and e["category"] == "equipment":
                     string += "\n• " + e["name"] + ":\n" + "\n".join(split(e["description"][0]["subcontent"][0]["content"]))
 
-            equipment_data.append([Table([[string]], colWidths=None, style=table_style_2)])
+            if string != "":
+                equipment_data.append([Table([[string]], colWidths=None, style=table_style_2)])
 
             # Rebuild the outer table with the nested tables
             outer_table = Table(outer_data, colWidths=None, rowHeights=0.35*inch)    
@@ -205,15 +227,24 @@ def generate_pdf_with_table(data):
                 abilities_table = Table(abilities_data, colWidths=None)
                 abilities_table.setStyle(table_style)
                 content.append(abilities_table)
+            if len(skills_data) != 1:
+                skills_table = Table(skills_data, colWidths=None)
+                skills_table.setStyle(table_style)
+                content.append(skills_table)
             if len(equipment_data) != 1:
                 equipment_table = Table(equipment_data, colWidths=None)
                 equipment_table.setStyle(table_style)
                 content.append(equipment_table)
-            content.append(Spacer(page_width, inch * 0.5))
+            if page_splitting:
+                content.append(PageBreak())
+            else:
+                content.append(Spacer(page_width, inch * 0.5))
         except IndexError:
             pass
 
     doc.build(content)
+
+    return doc.filename
     
 app = Flask(__name__)
 
@@ -223,23 +254,25 @@ app.config['ALLOWED_EXTENSIONS'] = {'json'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
-@app.route('/TrenchScribe/')
-def home():
-    return render_template('index.html')
-
-@app.route("/TrenchScribe/about")
+@app.route("/about")
 def about():
     return render_template("about.html")
 
-@app.route('/TrenchScribe/upload', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         f = request.files.get('file_input')
+        ignore_tough = 'ignore_tough' in request.form.getlist('checkbox1')
+        rounded_corners = 'rounded_corners' in request.form.getlist('checkbox2')
+        page_splitting = 'page_splitting' in request.form.getlist('checkbox3')
+        highlight_color = request.form.getlist("colorPicker")[0]
         
         if f and allowed_file(f.filename):
             data = json.load(f)
-            generate_pdf_with_table(data)
+            name = generate_pdf_with_table(data, ignore_tough, rounded_corners, page_splitting, highlight_color)
     
+            # return send_file(name, mimetype="application/pdf", as_attachment=True)
+
     return render_template('index.html')
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Consolas';
     background-color: #3c3046;
     color: #bebebe;
     margin: 0;
@@ -20,6 +20,7 @@ a:hover {
 }
 
 button {
+    font-family: 'Consolas';
     border-radius: 25px;
     background-color: #4b9aee;
 }
