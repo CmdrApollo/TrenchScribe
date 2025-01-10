@@ -70,23 +70,26 @@ def get_equipment(a):
 
 def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting, color):
     # Modify existing styles or add new ones
-    custom_styles.add(ParagraphStyle(
-        name='TitleStyle',
-        fontName='Courier',
-        fontSize=24,
-        leading=0,  # Line height
-        alignment=0,  # Center alignment
-        textColor=color
-    ))
+    try:
+        custom_styles.add(ParagraphStyle(
+            name='TitleStyle',
+            fontName='Courier',
+            fontSize=24,
+            leading=0,  # Line height
+            alignment=0,  # Center alignment
+            textColor=color
+        ))
 
-    custom_styles.add(ParagraphStyle(
-        name='BodyStyle',
-        fontName='Courier',
-        fontSize=12,
-        leading=0,
-        alignment=0,  # Left alignment
-        textColor=colors.black
-    ))
+        custom_styles.add(ParagraphStyle(
+            name='BodyStyle',
+            fontName='Courier',
+            fontSize=12,
+            leading=0,
+            alignment=0,  # Left alignment
+            textColor=colors.black
+        ))
+    except:
+        pass
 
     # Access styles like this:
     title_style = custom_styles['TitleStyle']
@@ -271,7 +274,7 @@ def upload_file():
             data = json.load(f)
             name = generate_pdf_with_table(data, ignore_tough, rounded_corners, page_splitting, highlight_color)
     
-            # return send_file(name, mimetype="application/pdf", as_attachment=True)
+            return send_file(name, mimetype="application/pdf", as_attachment=True)
 
     return render_template('index.html')
 
