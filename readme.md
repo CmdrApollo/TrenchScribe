@@ -1,4 +1,5 @@
-# TrenchScribe
+# Trench Scribe
+Built as a companion to Trench Compendium, this program allows you to take a downloaded JSON file for your warband and print it out, for easy reference during paper games. We really wanted this functionality, so here it is for anyone to use. Please let us know if there are any bugs, issues, or new features that you would want on this. It is not super user-friendly at this point, but hopefully it is easy enough to get running. Trench Scribe was created by Mélanie and Alex Jones.
 
 ## How to Install
 1) Install the latest version of python
