@@ -153,7 +153,7 @@ def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting,
             # Define the outer table's data
             outer_data = [
                 [ member["Name"], traits ],
-                [Table([[f"Base: {obj["Base"][0]}", f"Range: {literal(obj["Ranged"][0])}", f"Melee: {literal(obj["Melee"][0])}"]], colWidths=None, style=table_style), Table([[f"Move: {obj["Movement"][0]}\"", obj["Name"]]], colWidths=None, style=table_style)],
+                [Table([[f"Base: {obj['Base'][0]}", f"Range: {literal(obj['Ranged'][0])}", f"Melee: {literal(obj['Melee'][0])}"]], colWidths=None, style=table_style), Table([[f"Move: {obj['Movement'][0]}\"", obj['Name']]], colWidths=None, style=table_style)],
             ]
 
             weapon_data = [
