@@ -225,7 +225,7 @@ def allowed_file(filename):
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('index.html')
 
 @app.route("/about")
 def about():
@@ -240,7 +240,7 @@ def upload_file():
             data = json.load(f)
             generate_pdf_with_table(data)
     
-    return render_template('home.html')
+    return render_template('index.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
