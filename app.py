@@ -191,7 +191,7 @@ def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting,
 
             for ability in obj["Abilities"]:
                 a = get_addon(ability["Content"])
-                if a["name"] in ["Tough", "Strong", "Fear", "Infiltrator"] and ignore_tough:
+                if a["name"] in ["Tough", "Strong", "Fear", "Infiltrator", " Unholy Horror", "Demonic Horror", "Terrifying"] and ignore_tough:
                     continue
                 string += "\n• " + a["name"] + ":\n" + cursed(a)
 
