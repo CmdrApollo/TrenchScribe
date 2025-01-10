@@ -223,15 +223,15 @@ app.config['ALLOWED_EXTENSIONS'] = {'json'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
-@app.route('/')
+@app.route('/TrenchScribe/')
 def home():
     return render_template('index.html')
 
-@app.route("/about")
+@app.route("/TrenchScribe/about")
 def about():
     return render_template("about.html")
 
-@app.route('/upload', methods=['GET', 'POST'])
+@app.route('/TrenchScribe/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         f = request.files.get('file_input')
