@@ -166,7 +166,19 @@ def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting,
             for weapon in member["Equipment"]:
                 weapon_obj = weapon["Object"]
                 if weapon_obj["EquipType"]:
-                    weapon_data.append([Table([["Name", "Type", "Range", "Keywords"], [weapon_obj["Name"], weapon_obj["EquipType"], weapon_obj["Range"], ", ".join([t["tag_name"] for t in weapon_obj["Tags"]])]], colWidths=None, style=table_style)])
+                    weapon_data.append([
+                        Table([
+                            ["Name", "Type", "Range", "Keywords", "Modifiers"],
+                            [weapon_obj["Name"],
+                            weapon_obj["EquipType"],
+                            weapon_obj["Range"],
+                            ", ".join([t["tag_name"] for t in weapon_obj["Tags"]]),
+                            weapon_obj["Modifiers"][0] if (weapon_obj["Modifiers"] and len(weapon_obj["Modifiers"])) else ""]
+                    ], colWidths=None, style=table_style)]
+                    )
+
+                    if weapon_obj["Modifiers"] and len(weapon_obj["Modifiers"]):
+                        weapon_data.append([Table([[f"Modifiers:\n{"\n".join(split(weapon_obj["Modifiers"][0]))}"]], colWidths=None, style=table_style_2)])
 
                     if len(weapon_obj["Description"]):
                         weapon_data.append([Table([[f"Rules:\n{cursed_weapon(weapon_obj)}"]], colWidths=None, style=table_style_2)])
@@ -187,7 +199,13 @@ def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting,
                 string += "\n• " + upgrade["Name"] + ":\n" + "\n".join(split(upgrade["Description"][0]["Content"]))
 
             if string != "":
-                abilities_data.append([Table([[string]], colWidths=None, style=table_style_2)])
+                if len(string.splitlines()) > 50:
+                    line1 = "\n".join(string.splitlines()[:50])
+                    line2 = "\n".join(string.splitlines()[50:])
+                    abilities_data.append([Table([[line1]], colWidths=None, style=table_style_2)])
+                    abilities_data.append([Table([[line2]], colWidths=None, style=table_style_2)])
+                else:
+                    abilities_data.append([Table([[string]], colWidths=None, style=table_style_2)])
 
             skills_data = [
                 ['Skills/Injuries:'],
@@ -202,7 +220,13 @@ def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting,
                 string += "\n• " + injury["Name"] + ":\n" + "\n".join(split(injury["Description"][0]["Content"]))
 
             if string != "":
-                skills_data.append([Table([[string]], colWidths=None, style=table_style_2)])
+                if len(string.splitlines()) > 50:
+                    line1 = "\n".join(string.splitlines()[:50])
+                    line2 = "\n".join(string.splitlines()[50:])
+                    skills_data.append([Table([[line1]], colWidths=None, style=table_style_2)])
+                    skills_data.append([Table([[line2]], colWidths=None, style=table_style_2)])
+                else:
+                    skills_data.append([Table([[string]], colWidths=None, style=table_style_2)])
             
             equipment_data = [
                 ['Equipment:'],
