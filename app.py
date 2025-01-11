@@ -329,9 +329,17 @@ def allowed_file(filename):
 def about():
     return render_template("about.html")
 
+filename = ""
+
 # home page
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
+    global filename
+
+    if len(filename):
+        os.remove(filename)
+        filename = ""
+
     if request.method == 'POST':
         # filename
         f = request.files.get('file_input')
@@ -347,10 +355,12 @@ def upload_file():
         if f and allowed_file(f.filename):
             # load the json and generate the data
             data = json.load(f)
-            name = generate_pdf_with_table(data, ignore_tough, rounded_corners, page_splitting, highlight_color)
+            filename = generate_pdf_with_table(data, ignore_tough, rounded_corners, page_splitting, highlight_color)
     
             # download the file on the user's machine
-            return send_file(name, mimetype="application/pdf", as_attachment=True)
+            s = send_file(filename, mimetype="application/pdf", as_attachment=True)
+
+            return s
 
     # render the home page html
     return render_template('index.html')
