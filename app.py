@@ -125,7 +125,7 @@ def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting,
 
     # spacer
     content.append(Spacer(page_width, inch * 0.5))
-    content.append(HRFlowable(width="90%", thickness=1, lineCap='round', color='#808080', spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
+    content.append(HRFlowable(width="100%", thickness=1, lineCap='round', color='#808080', spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
     content.append(Spacer(page_width, inch * 0.5))
 
     # main table style
@@ -305,7 +305,7 @@ def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting,
                 content.append(PageBreak())
             else:
                 content.append(Spacer(page_width, inch * 0.5))
-                content.append(HRFlowable(width="90%", thickness=1, lineCap='round', color='#808080', spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
+                content.append(HRFlowable(width="100%", thickness=1, lineCap='round', color='#808080', spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
                 content.append(Spacer(page_width, inch * 0.5))
         except IndexError:
             pass
