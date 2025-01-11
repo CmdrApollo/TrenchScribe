@@ -1,4 +1,4 @@
-# Trench Scribe v0.2.2
+# Trench Scribe v0.2.3
 
 # imports
 from flask import Flask, render_template, request, send_file
