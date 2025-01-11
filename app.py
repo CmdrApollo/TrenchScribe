@@ -197,9 +197,6 @@ def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting,
                     ], colWidths=None, style=table_style)]
                     )
 
-                    if weapon_obj["Modifiers"] and len(weapon_obj["Modifiers"]):
-                        weapon_data.append([Table([[f"Modifiers:\n{"\n".join(split(weapon_obj["Modifiers"][0]))}"]], colWidths=None, style=table_style_2)])
-
                     if len(weapon_obj["Description"]):
                         weapon_data.append([Table([[f"Rules:\n{cursed_weapon(weapon_obj)}"]], colWidths=None, style=table_style_2)])
 
