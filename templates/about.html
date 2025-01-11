@@ -7,8 +7,14 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
 </head>
 <body>
-    <h1>About</h1>
-    <p>Trench Scribe was created by CmdrApollo.</p>
-    <a href="/">Home</a>
+    <nav class="navbar">
+        Trench Scribe v0.2.4 \
+        <a href="/">Home</a> \
+        <a href="/about">About</a>
+    </nav>
+    <br>
+    <div class="aboutText">
+        <p>Built as a companion to Trench Compendium, this program allows you to take a downloaded JSON file for your warband and print it out, for easy reference during paper games. We really wanted this functionality, so here it is for anyone to use. Please let us know if there are any bugs, issues, or new features that you would want on this. It is not super user-friendly at this point, but hopefully it is easy enough to get running. Trench Scribe was created by Mélanie and Alex Jones.</p>
+    </div>
 </body>
 </html>
