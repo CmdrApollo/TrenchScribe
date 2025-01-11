@@ -1,4 +1,4 @@
-# Trench Scribe v0.2.4
+# Trench Scribe v0.2.5
 
 # imports
 from flask import Flask, render_template, request, send_file
@@ -176,7 +176,7 @@ def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting,
             # define the model's outer table data
             outer_data = [
                 [ member["Name"], traits ],
-                [Table([[f"Base: {obj['Base'][0]}", f"Range: {literal(obj['Ranged'][0])}", f"Melee: {literal(obj['Melee'][0])}"]], colWidths=None, style=table_style), Table([[f"Move: {obj['Movement'][0]}\"", obj['Name']]], colWidths=None, style=table_style)],
+                [Table([[f"Base: {obj['Base'][0]}", f"Range: {literal(obj['Ranged'][0]) if len(obj['Ranged']) else "N/A"}", f"Melee: {literal(obj['Melee'][0])}"]], colWidths=None, style=table_style), Table([[f"Move: {obj['Movement'][0]}\"", obj['Name']]], colWidths=None, style=table_style)],
             ]
 
             # define the model's weapon table data
