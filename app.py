@@ -7,7 +7,7 @@ import os, json
 from typing import Any
 
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak, HRFlowable
 from reportlab.lib.styles import getSampleStyleSheet
 
 inch = 72
@@ -124,6 +124,8 @@ def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting,
     content.append(Paragraph(data["Name"], title_style))
 
     # spacer
+    content.append(Spacer(page_width, inch * 0.5))
+    content.append(HRFlowable(width="90%", thickness=1, lineCap='round', color='#808080', spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
     content.append(Spacer(page_width, inch * 0.5))
 
     # main table style
@@ -263,7 +265,7 @@ def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting,
 
             for equipment in member["Equipment"]:
                 e = get_equipment(equipment['ID'])
-                if len(e["description"]) and e["category"] == "equipment":
+                if len(e["description"]) and e["category"] in ["equipment", "armour"]:
                     string += "\n• " + e["name"] + ":\n" + "\n".join(split(e["description"][0]["subcontent"][0]["content"]))
 
             if string != "":
@@ -302,6 +304,8 @@ def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting,
             if page_splitting:
                 content.append(PageBreak())
             else:
+                content.append(Spacer(page_width, inch * 0.5))
+                content.append(HRFlowable(width="90%", thickness=1, lineCap='round', color='#808080', spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
                 content.append(Spacer(page_width, inch * 0.5))
         except IndexError:
             pass
