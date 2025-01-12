@@ -1,4 +1,4 @@
-# Trench Scribe v0.2.5
+# Trench Scribe v0.2.6
 
 # imports
 from flask import Flask, render_template, request, send_file
@@ -9,6 +9,8 @@ from typing import Any
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak, HRFlowable
 from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.colors import Color
+from reportlab.graphics.shapes import Drawing, Rect, Image
 
 inch = 72
 
@@ -19,6 +21,11 @@ equipment = json.load(open(os.path.join('data', 'equipment.json'), 'rb'))
 # reportlab is used to actually generate the pdf files
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib import colors
+
+# store the letter page width and height to variables
+page_width, page_height = letter  # Default letter size (8.5 x 11 inches)
+
+watermark = Image(0, 0, 200, 100, "test.png")
 
 # puts a '+' in front of positive integers
 def literal(x: int) -> str:
@@ -94,6 +101,37 @@ def get_equipment(a):
         
     return equipment[0]
 
+def add_watermark(c, x, y, width, height, opacity):
+    """Adds an image with specified opacity to the canvas."""
+
+    # Create a drawing to hold the image and mask
+    drawing = Drawing(width, height)
+
+    # Add the image to the drawing
+    drawing.add(watermark, name='image')
+
+    # Create a transparent color for the mask
+    mask_color = Color(1, 1, 1, opacity)
+
+    # Draw a filled rectangle over the image to create a mask
+    drawing.add(
+        Rect(0, 0, width, height, fillColor=mask_color),
+        name='mask'
+    )
+
+    # Draw the drawing on the canvas
+    drawing.drawOn(c, x, y)
+
+def on_first_page(canvas, document):
+    canvas.setFont("Courier", 8)
+    canvas.drawRightString(page_width - 5, 5, "Generated With Trench Scribe")
+    canvas.drawString(5, 5, f"Page {canvas.getPageNumber()}")
+
+def on_later_pages(canvas, document):
+    canvas.setFont("Courier", 8)
+    canvas.drawRightString(page_width - 5, 5, "Generated With Trench Scribe")
+    canvas.drawString(5, 5, f"Page {canvas.getPageNumber()}")
+    
 def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting, color):
     # stylesheet object
     custom_styles = getSampleStyleSheet()
@@ -127,11 +165,9 @@ def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting,
     # make the doc with reportlab
     doc = SimpleDocTemplate(filename, pagesize=letter)
 
-    # store the letter page width and height to variables
-    page_width, page_height = letter  # Default letter size (8.5 x 11 inches)
-    
     # the contents of the document
     content = []
+
     # warband name as a title
     content.append(Paragraph(data["Name"], title_style))
 
@@ -188,7 +224,7 @@ def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting,
             # define the model's outer table data
             outer_data = [
                 [ remove_parentheticals(member["Name"]).strip(), traits ],
-                [Table([[f"Base: {obj['Base'][0]}", f"Range: {literal(obj['Ranged'][0]) if len(obj['Ranged']) else "N/A"}", f"Melee: {literal(obj['Melee'][0])}"]], colWidths=None, style=table_style), Table([[f"Move: {obj['Movement'][0]}\"", remove_parentheticals(obj['Name']).strip()]], colWidths=None, style=table_style)],
+                [Table([[f"Base: {obj['Base'][0]}", f"Range: {literal(obj['Ranged'][0]) if len(obj['Ranged']) else 'N/A'}", f"Melee: {literal(obj['Melee'][0])}"]], colWidths=None, style=table_style), Table([[f"Move: {obj['Movement'][0]}\"", remove_parentheticals(obj['Name']).strip()]], colWidths=None, style=table_style)],
             ]
 
             # define the model's weapon table data
@@ -323,7 +359,7 @@ def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting,
             pass
 
     # build the document
-    doc.build(content)
+    doc.build(content, on_first_page, on_later_pages)
 
     # return the filename of the document so
     # that flask can download it for the user
@@ -374,7 +410,7 @@ def upload_file():
             # load the json and generate the data
             data = json.load(f)
             filename = generate_pdf_with_table(data, ignore_tough, rounded_corners, page_splitting, highlight_color)
-    
+
             # download the file on the user's machine
             return send_file(filename, mimetype="application/pdf", as_attachment=True)
 
@@ -383,4 +419,4 @@ def upload_file():
 
 # run the app
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
