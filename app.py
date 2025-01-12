@@ -259,7 +259,7 @@ def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting,
             string = ""
 
             if len(obj["Armour"]) and obj["Armour"][0] != 0:
-                string += f"\n• " + "\n".join(split(f"This unit is encased in a set of armour, which grants a {literal(obj["Armour"][0])} modifier to all injury rolls against the model."))
+                string += f"\n• " + "\n".join(split(f"This unit is encased in a set of armour, which grants a {literal(obj['Armour'][0])} modifier to all injury rolls against the model."))
 
             for ability in obj["Abilities"]:
                 a = get_addon(ability["Content"])
