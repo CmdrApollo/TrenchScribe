@@ -1,4 +1,4 @@
-# Trench Scribe v0.2.7
+# Trench Scribe v0.2.8
 
 # imports
 from flask import Flask, render_template, request, send_file
@@ -257,6 +257,9 @@ def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting,
 
             # populate the abilities and upgrades            
             string = ""
+
+            if len(obj["Armour"]) and obj["Armour"][0] != 0:
+                string += f"\n• " + "\n".join(split(f"This unit is encased in a set of armour, which grants a {literal(obj["Armour"][0])} modifier to all injury rolls against the model."))
 
             for ability in obj["Abilities"]:
                 a = get_addon(ability["Content"])
