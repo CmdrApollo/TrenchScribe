@@ -342,6 +342,11 @@ def allowed_file(filename):
 def about():
     return render_template("about.html")
 
+# about page
+@app.route("/support")
+def support():
+    return render_template("support.html")
+
 filename = ""
 
 # home page
@@ -371,9 +376,7 @@ def upload_file():
             filename = generate_pdf_with_table(data, ignore_tough, rounded_corners, page_splitting, highlight_color)
     
             # download the file on the user's machine
-            s = send_file(filename, mimetype="application/pdf", as_attachment=True)
-
-            return s
+            return send_file(filename, mimetype="application/pdf", as_attachment=True)
 
     # render the home page html
     return render_template('index.html')
