@@ -9,22 +9,36 @@
 <body>
     <nav class="navbar">
         <div style="font-size: 4rem; font-family: canterburyFont">Trench Scribe</div>
-        <a href="/">Home</a> \
-        <a href="/about">About</a> \
-        <a href="/support">Support</a>
     </nav>
     <br>
-    <form class="dataInput" method="POST" enctype="multipart/form-data" action="/">
-        <label for="file_input">Choose File</label>
-        <input type="file" id="file_input" name="file_input" required>
-        <br><br>
-        <input type="checkbox" name="checkbox1" value="ignore_tough">Ignore Tough / Strong / Fear / Infiltrator<br>
-        <input type="checkbox" name="checkbox2" value="rounded_corners">Rounded Corners<br>
-        <input type="checkbox" name="checkbox3" value="page_splitting">New Page For Each Model<br><br>
-        Title Color: <input type="color" value="#008000" name="colorPicker">
-        <br><br>
-        <button type="submit">Generate</button>
-    </form>
-    <div class="version">v0.2.8</div>
+    <div class="content">
+        <h2>Instructions</h2>
+        <p>From Trench Compendium's Warband Builder, export a JSON file of the warband that you wish to print and upload it below to create a printable PDF of your warband's rules.</p>
+        <h2>Upload & Generate</h2>
+        <form class="dataInput" method="POST" enctype="multipart/form-data" action="/">
+            <label for="file_input">Choose File</label>
+            <input type="file" id="file_input" name="file_input" required>
+            <br><br>
+            <input type="checkbox" name="checkbox1" value="ignore_tough">Ignore Tough / Strong / Fear / Infiltrator<br>
+            <input type="checkbox" name="checkbox2" value="rounded_corners">Rounded Corners<br>
+            <input type="checkbox" name="checkbox3" value="page_splitting">New Page For Each Model<br><br>
+            Title Color <input type="color" value="#008000" name="colorPicker"><br><br>
+            <!-- Background Image (Slow)
+            <input type="file" id="file_input_2" name="file_input_2" required><br>
+            Background Opacity
+            <div class="slider">
+                <input type="range" min="0" max="100" value="0" class="slider" id="myRange">
+            </div> -->
+            <!-- <br><br> -->
+            <button type="submit">Generate</button>
+        </form>
+        <h2>Support Trench Scribe</h2>
+        Coming soon.
+        <h2>About</h2>
+        <p>Built as a companion to Trench Compendium, this website allows you to take a downloaded JSON file for your warband and print it out, for easy reference during paper games. We really wanted this functionality, so here it is for anyone to use. Please let us know if there are any bugs, issues, or new features that you would want on this. Trench Scribe was created by Mélanie and Alex Jones.</p>
+    </div>
+    <nav>
+        <div class="version">v0.2.9</div>
+    </nav>
 </body>
 </html>

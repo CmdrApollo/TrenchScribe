@@ -7,7 +7,6 @@
 
 nav {
     font-family: "Courier";
-    font-size: xx-large;
     background-color: #2c2036;
     width: 100%;
 }
@@ -22,21 +21,24 @@ nav {
     font-family: "Courier";
     font-size: 1rem;
     position: absolute;
-    left: 95%;
-    top: 95%;
-    transform-origin: bottom right;
+    bottom: 5px;
+    right: 5px;
 }
 
-.aboutText, .dataInput {
+.content {
     background-color: #2c2036;
     font-size: x-large;
-    padding: 5px;
+    padding: 10px;
     border-radius: 20px;
     position: absolute;
     margin: auto;
     width: 50%;
     left: 25%;
     top: 25%;
+}
+
+h2 {
+    font-family: "canterburyFont";
 }
 
 body {

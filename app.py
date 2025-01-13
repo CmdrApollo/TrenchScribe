@@ -1,4 +1,4 @@
-# Trench Scribe v0.2.8
+# Trench Scribe v0.2.9
 
 # imports
 from flask import Flask, render_template, request, send_file
@@ -6,9 +6,11 @@ import os, json
 
 from typing import Any
 
+# reportlab is used to actually generate the pdf files
+from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak, HRFlowable
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.colors import Color
 from reportlab.graphics.shapes import Drawing, Rect, Image
 
@@ -17,10 +19,6 @@ inch = 72
 # json data for description/equipment descriptions
 addons = json.load(open(os.path.join('data', 'addons.json'), 'rb'))
 equipment = json.load(open(os.path.join('data', 'equipment.json'), 'rb'))
-
-# reportlab is used to actually generate the pdf files
-from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
-from reportlab.lib import colors
 
 # store the letter page width and height to variables
 page_width, page_height = letter  # Default letter size (8.5 x 11 inches)
@@ -259,7 +257,7 @@ def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting,
             string = ""
 
             if len(obj["Armour"]) and obj['Armour'][0] != 0:
-                string += f"\n• " + "\n".join(split(f"This unit is encased in a set of armour, which grants a {literal(obj['Armour'][0])} modifier to all injury rolls against the model."))
+                string += f"\n• " + "\n".join(split(f"This model is armoured by default, which grants a {literal(obj['Armour'][0])} modifier to all injury rolls against the model."))
 
             for ability in obj["Abilities"]:
                 a = get_addon(ability["Content"])
@@ -317,7 +315,10 @@ def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting,
             for equipment in member["Equipment"]:
                 e = get_equipment(equipment['ID'])
                 if len(e["description"]) and e["category"] in ["equipment", "armour"]:
-                    string += "\n• " + e["name"] + ":\n" + "\n".join(split(e["description"][0]["subcontent"][0]["content"]))
+                    try:
+                        string += "\n• " + e["name"] + ":\n" + "\n".join(split(e["description"][0]["subcontent"][0]["content"]))
+                    except KeyError:
+                        pass
 
             if string != "":
                 equipment_data.append([Table([[string]], colWidths=None, style=table_style_2)])
