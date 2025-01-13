@@ -1,4 +1,4 @@
-# Trench Scribe v0.3.1
+# Trench Scribe v0.3.3
 
 # imports
 from flask import Flask, render_template, request, send_file
@@ -12,7 +12,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak, HRFlowable
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.colors import Color
-from reportlab.graphics.shapes import Drawing, Rect, Image
+import PIL
 
 inch = 72
 
@@ -22,8 +22,6 @@ equipment = json.load(open(os.path.join('data', 'equipment.json'), 'rb'))
 
 # store the letter page width and height to variables
 page_width, page_height = letter  # Default letter size (8.5 x 11 inches)
-
-watermark = Image(0, 0, 200, 100, "test.png")
 
 # puts a '+' in front of positive integers
 def literal(x: int) -> str:
@@ -99,28 +97,8 @@ def get_equipment(a):
         
     return equipment[0]
 
-def add_watermark(c, x, y, width, height, opacity):
-    """Adds an image with specified opacity to the canvas."""
-
-    # Create a drawing to hold the image and mask
-    drawing = Drawing(width, height)
-
-    # Add the image to the drawing
-    drawing.add(watermark, name='image')
-
-    # Create a transparent color for the mask
-    mask_color = Color(1, 1, 1, opacity)
-
-    # Draw a filled rectangle over the image to create a mask
-    drawing.add(
-        Rect(0, 0, width, height, fillColor=mask_color),
-        name='mask'
-    )
-
-    # Draw the drawing on the canvas
-    drawing.drawOn(c, x, y)
-
 def on_first_page(canvas, document):
+
     canvas.setFont("Courier", 8)
     canvas.drawRightString(page_width - 5, 5, "Generated With Trench Scribe")
     canvas.drawString(5, 5, f"Page {canvas.getPageNumber()}")
@@ -392,7 +370,7 @@ filename = ""
 # home page
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
-    global filename
+    global filename, image
 
     if len(filename):
         os.remove(filename)
@@ -406,14 +384,20 @@ def upload_file():
         ignore_tough = 'ignore_tough' in request.form.getlist('checkbox1')
         rounded_corners = 'rounded_corners' in request.form.getlist('checkbox2')
         page_splitting = 'page_splitting' in request.form.getlist('checkbox3')
-        
+
         # warband color
         highlight_color = request.form.getlist("colorPicker")[0]
         
         if f and allowed_file(f.filename):
             # load the json and generate the data
             data = json.load(f)
-            filename = generate_pdf_with_table(data, ignore_tough, rounded_corners, page_splitting, highlight_color)
+            filename = generate_pdf_with_table(
+                data,
+                ignore_tough,
+                rounded_corners,
+                page_splitting,
+                highlight_color
+            )
 
             # download the file on the user's machine
             return send_file(filename, mimetype="application/pdf", as_attachment=True)

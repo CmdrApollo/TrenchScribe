@@ -19,26 +19,35 @@
             <label for="file_input">Choose File</label>
             <input type="file" id="file_input" name="file_input" required>
             <br><br>
-            <input type="checkbox" name="checkbox1" value="ignore_tough">Ignore Tough / Strong / Fear / Infiltrator<br>
-            <input type="checkbox" name="checkbox2" value="rounded_corners">Rounded Corners<br>
-            <input type="checkbox" name="checkbox3" value="page_splitting">New Page For Each Model<br><br>
+            <input type="checkbox" name="checkbox1" value="ignore_tough" checked="checked">Ignore Tough / Strong / Fear / Infiltrator<br>
+            <input type="checkbox" name="checkbox2" value="rounded_corners" checked="checked">Rounded Corners<br>
+            <input type="checkbox" name="checkbox3" value="page_splitting" checked="checked">New Page For Each Model<br><br>
             Title Color <input type="color" value="#000000" name="colorPicker"><br><br>
-            <!-- Background Image (Slow)
-            <input type="file" id="file_input_2" name="file_input_2" required><br>
-            Background Opacity
-            <div class="slider">
-                <input type="range" min="0" max="100" value="0" class="slider" id="myRange">
-            </div> -->
-            <!-- <br><br> -->
+
             <button type="submit">Generate</button>
         </form>
         <h2>Support Trench Scribe</h2>
-        Coming soon.
+        Coming soon!
+        <!-- Donate to help cover server costs, or buy us some coffee! (and have your name put on this website if you donate $5 or more)
+        <br><br>
+        <form action="https://www.paypal.com/donate" method="post" target="_top">
+            <input type="hidden" name="business" value="QXN2MKXYW7EXW" />
+            <input type="hidden" name="no_recurring" value="0" />
+            <input type="hidden" name="item_name" value="Donate to help cover server costs, or buy us some coffee." />
+            <input type="hidden" name="currency_code" value="USD" />
+            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+            <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+        </form>
+        <br>
+        <a href="/support">See our supporters here!</a> -->
         <h2>About</h2>
-        <p>Built as a companion to Trench Compendium, this website allows you to take a downloaded JSON file for your warband and print it out, for easy reference during paper games. We really wanted this functionality, so here it is for anyone to use. Please let us know if there are any bugs, issues, or new features that you would want on this. Trench Scribe was created by Mélanie and Alex Jones.</p>
+        <p>Built as a companion to Trench Compendium, this website allows you to take a downloaded JSON file for your warband and print it out, for easy reference during paper games. We really wanted this functionality, so here it is for anyone to use. Feel free to reach out for any bug reports or feature requests. You can find us <a href="https://discord.com/channels/1240314679331389550/1327157285457231983">here.</a> Trench Scribe was created by Mélanie and Alex Jones.</p>
+        <button id="theme-toggle">Switch Theme</button>
+        <nav>
+            <div class="version">v0.3.3</div>
+        </nav>
     </div>
-    <nav>
-        <div class="version">v0.3.1</div>
-    </nav>
+
+    <script src="../static/scripts/script.js"></script>
 </body>
 </html>
