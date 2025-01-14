@@ -200,7 +200,7 @@ def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting,
             # define the model's outer table data
             outer_data = [
                 [ remove_parentheticals(member["Name"]).strip(), traits ],
-                [Table([[f"Base: {obj['Base'][0]}", f"Range: {literal(obj['Ranged'][0]) if len(obj['Ranged']) else 'N/A'}", f"Melee: {literal(obj['Melee'][0])}"]], colWidths=None, style=table_style), Table([[f"Move: {obj['Movement'][0]}\"", remove_parentheticals(obj['Name']).strip()]], colWidths=None, style=table_style)],
+                [Table([[f"Base: {'x'.join([str(d) for d in obj['Base']])}", f"Range: {literal(obj['Ranged'][0]) if len(obj['Ranged']) else 'N/A'}", f"Melee: {literal(obj['Melee'][0])}"]], colWidths=None, style=table_style), Table([[f"Move: {obj['Movement'][0]}\"", remove_parentheticals(obj['Name']).strip()]], colWidths=None, style=table_style)],
             ]
 
             # define the model's weapon table data
