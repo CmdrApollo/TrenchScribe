@@ -356,11 +356,6 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 # about page
-@app.route("/about")
-def about():
-    return render_template("about.html")
-
-# about page
 @app.route("/support")
 def support():
     return render_template("support.html")
