@@ -59,7 +59,8 @@ def remove_parentheticals(line: str) -> str:
 # lists would work properly
 def cursed(obj: dict[Any: Any]):
     final = ""
-    final += "\n".join(split(obj["description"][0]["content"]))
+    for i in range(len(obj["description"])):
+        final += "\n".join(split(obj["description"][i]["content"])) + "\n"
     try:
         if len(obj["description"]) > 1:
             for d in obj["description"][1]["subcontent"]:
@@ -72,7 +73,8 @@ def cursed(obj: dict[Any: Any]):
 # work with weapons
 def cursed_weapon(obj: dict[Any: Any]):
     final = ""
-    final += "\n".join(split(obj["Description"][0]["SubContent"][0]["Content"]))
+    for i in range(len(obj["Description"])):
+        final += "\n".join(split(obj["Description"][i]["SubContent"][0]["Content"])) + "\n"
     try:
         if len(obj["Description"][0]["SubContent"]) > 1:
             for d in obj["Description"][0]["SubContent"][1]["SubContent"]:
@@ -108,7 +110,7 @@ def on_later_pages(canvas, document):
     canvas.drawRightString(page_width - 5, 5, "Generated With Trench Scribe")
     canvas.drawString(5, 5, f"Page {canvas.getPageNumber()}")
     
-def generate_pdf_with_table(data, ignore_tough, corner_rounding, page_splitting, color):
+def generate_pdf(data, ignore_tough, corner_rounding, page_splitting, color):
     # stylesheet object
     custom_styles = getSampleStyleSheet()
 
@@ -372,7 +374,7 @@ def upload_file():
         filename = ""
 
     if request.method == 'POST':
-        # filename
+        # file object
         f = request.files.get('file_input')
 
         # flags
@@ -386,7 +388,7 @@ def upload_file():
         if f and allowed_file(f.filename):
             # load the json and generate the data
             data = json.load(f)
-            filename = generate_pdf_with_table(
+            filename = generate_pdf(
                 data,
                 ignore_tough,
                 rounded_corners,
