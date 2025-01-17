@@ -236,6 +236,9 @@ def generate_pdf(data, ignore_tough, corner_rounding, page_splitting, color):
             # populate the abilities and upgrades            
             string = ""
 
+            if len(obj["EventTags"]) and "flying" in obj["EventTags"] and obj["EventTags"]["flying"]:
+                string += f"\n• " + "\n".join(split("Flying:\nFlying models treat Difficult and/or Dangerous Terrain as Open Terrain and they do not trigger mines and similar devices. Flying models can climb up and down and they can jump over gaps of up to their Movement characteristic without taking ACTIONS."))
+
             if len(obj["Armour"]) and obj['Armour'][0] != 0:
                 string += f"\n• " + "\n".join(split(f"This model is armoured by default, which grants a {literal(obj['Armour'][0])} modifier to all injury rolls against the model."))
 
