@@ -399,8 +399,12 @@ def upload_file():
                 highlight_color
             )
 
+            f.close()
+            
             # download the file on the user's machine
             return send_file(filename, mimetype="application/pdf", as_attachment=True)
+
+        f.close()
 
     # render the home page html
     return render_template('index.html')
