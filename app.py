@@ -217,7 +217,7 @@ def generate_pdf(data, ignore_tough, corner_rounding, page_splitting, color):
                     weapon_data.append([
                         Table([
                             ["Name", "Type", "Range", "Keywords", "Modifiers"],
-                            [weapon_obj["Name"],
+                            [remove_parentheticals(weapon_obj["Name"]),
                             weapon_obj["EquipType"],
                             weapon_obj["Range"],
                             ", ".join([t["tag_name"] for t in weapon_obj["Tags"]]),
