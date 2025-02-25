@@ -1172,13 +1172,19 @@
         "blurb": "Equipped with close combat weaponry, and steel body armour. Casualties are extremely high in the combat engineer units, but they consider it an honour to fight and die for New Antioch and the Church.",
         "modifiers": null,
         "eventtags": {"trait": true, "armour": -2},
-        "description":  [
-            {
-                "tags": [{"tag_name": "desc_type", "val": "desc"}],
-                "content": "Grants a -2 modifier to injury rolls made against the Combat Engineer (this is included in the Combat Engineer’s profile). All weapons with keyword SHRAPNEL suffer -1 DICE on all injury rolls against the Combat Engineer and SHRAPNEL attacks do not cause extra BLOOD MARKERS on a model wearing this suit. The effects relating to SHRAPNEL work even against attacks that ignore armour.",
-                "glossary": [{"val": "SHRAPNEL", "id": "gl_shrapnel"},{"val": "-1 DICE", "id": "gl_minusdice"},{"val": "BLOOD MARKERS", "id": "gl_bloodmarker"}]
-            }
-        ]
+                "description":  [
+                            {
+                                "tags": [{"tag_name": "desc_type", "val": "effect"}],
+                                "content": "Rule:",
+                                "subcontent": [
+                                    {
+                                        "tags": [{"tag_name": "desc_type", "val": "desc"}],
+                                        "content": "Grants a -2 modifier to injury rolls made against the Combat Engineer (this is included in the Combat Engineer’s profile). All weapons with keyword SHRAPNEL suffer -1 DICE on all injury rolls against the Combat Engineer and SHRAPNEL attacks do not cause extra BLOOD MARKERS on a model wearing this suit. The effects relating to SHRAPNEL work even against attacks that ignore armour.",
+                                     "glossary": [{"val": "SHRAPNEL", "id": "gl_shrapnel"},{"val": "-1 DICE", "id": "gl_minusdice"},{"val": "BLOOD MARKERS", "id": "gl_bloodmarker"}]
+                                    }
+                                ]
+                            }
+                        ]
     },
     {
         "id": "eq_alaybozan",
