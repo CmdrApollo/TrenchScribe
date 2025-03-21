@@ -249,8 +249,7 @@ def generate_pdf(data, ignore_tough, corner_rounding, page_splitting, color):
                 string += "\n• " + a["name"] + ":\n" + cursed(a)
 
             for upgrade in member["Upgrades"]:
-                a = upgrade["Description"]
-                string += "\n• " + upgrade["Name"] + ":\n" + cursed(a)
+                string += "\n• " + upgrade["Name"] + ":\n" + cursed(upgrade)
 
             # split a string that's too long into two
             # will crash otherwise
