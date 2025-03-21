@@ -1,4 +1,4 @@
-upgrade# Trench Scribe v0.3.3
+# Trench Scribe v0.3.3
 
 # imports
 from flask import Flask, render_template, request, send_file
@@ -249,7 +249,7 @@ def generate_pdf(data, ignore_tough, corner_rounding, page_splitting, color):
                 string += "\n• " + a["name"] + ":\n" + cursed(a)
 
             for upgrade in member["Upgrades"]:
-                a = upgrade[]
+                a = upgrade["Description"]
                 string += "\n• " + upgrade["Name"] + ":\n" + cursed(a)
 
             # split a string that's too long into two
